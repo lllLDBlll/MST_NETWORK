@@ -6,18 +6,29 @@ Minimum Spanning Tree for network topology.
 ###- Extern Input Graph
 ###- Datas by IP/MASK/GATEWAY in Vertices
 
+Minimum spanning tree for computer network topology example
+
 References:
 https://www.youtube.com/watch?v=Xmwmezk75Tk
 <p>
 http://slideplayer.com/slide/8807967/
 <p>
-Borůvka's algorithm
-Minimum spanning tree for computer network topology example
-http://www.geeksforgeeks.org/greedy-algorithms-set-5-prims-minimum-spanning-tree-mst-2/
-<p>
+  
+#Borůvka's algorithm
+http://www.geeksforgeeks.org/greedy-algorithms-set-9-boruvkas-algorithm/
+https://en.wikipedia.org/wiki/Bor%C5%AFvka%27s_algorithm
+  
+#Prim's
+https://en.wikipedia.org/wiki/Prim%27s_algorithm
 http://www.geeksforgeeks.org/greedy-algorithms-set-5-prims-mst-for-adjacency-list-representation/
+http://www.geeksforgeeks.org/greedy-algorithms-set-5-prims-minimum-spanning-tree-mst-2/
 
 <p>
+#Kruskal's
+https://en.wikipedia.org/wiki/Kruskal%27s_algorithm
+http://www.geeksforgeeks.org/greedy-algorithms-set-2-kruskals-minimum-spanning-tree-mst/
+<p>
+  
 #Extras:
 Definições do Projeto:
 - Ler um arquivo .dot com os dados  do grafo
