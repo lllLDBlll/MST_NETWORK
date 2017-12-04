@@ -78,8 +78,11 @@ void imprimi_lista (lista_enc_t *lista)
     no = lista->cabeca;
 
     while (no){
-        printf("Dados: %p\n", obter_dado(no));
-
+        printf("%s\n", obter_dado(no));
+        printf("Address: %p\n", obter_dado(no));
+        //printf("Type char: %c\n", obter_dado(no));
+        int *test = obter_dado(no); 
+        printf("Type int: %d\n", *test);
         no = obtem_proximo(no);
     }
 }
