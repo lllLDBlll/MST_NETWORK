@@ -8,21 +8,25 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-
+#include <stdint.h>
+#include <stdbool.h>
 #include "grafo.h"
 #include "lista_enc.h" // Leonardo
 #include "no.h"	// Leonardo
 
 struct vertices {
 	int id;
-	char *string1;
-	char *string2;
+	char *ip;
+	char *mac;
+	char *gtw;
+	bool flag;
 	/* mais informacoes, se necessario */
 };
 
 struct arestas {
 	int adj;
 	int weight;
+	bool flag;
 	/* mais informacoes, se necessario */
 };
 
@@ -77,6 +81,61 @@ grafo_t *cria_grafo(int vertices)
 	return g;
 }
 
+void prims(grafo_t *g, int v){
+	int i, j;
+	//aresta_t **matriz_adj;
+
+	if (g == NULL){
+		perror("prims");
+		exit(EXIT_FAILURE);
+	}
+	
+	if (v > g->n_vertices){
+		perror("prims vertices");
+		exit(EXIT_FAILURE);
+	}
+	int k=0;
+	while(k != g->n_vertices-1){
+		uint8_t w, id, menor = 0xFF;
+		for (i=0; i < g->n_vertices-1; i++){
+			w = g->matriz_adj[v][i].weight;
+			//printf("Peso: %d; Bool: %d\n",w,g->matriz_adj[v][i].adj);
+			if ((g->matriz_adj[v][i].adj == 1) && (g->matriz_adj[v][i].flag == 0)){ // verifica se existe a adjacencia
+				//menor = menor > w ? w : menor; // condição de definição do menor
+				if (menor > w ){
+					menor = w;
+					id = i; // vertice adjacente com o menor peso na aresta
+				}
+				//printf("i:%d\n",i);
+			}
+			//printf("%d\n",menor);
+		}
+		g->matriz_adj[v][id].flag = TRUE;
+		g->matriz_adj[id][v].flag = TRUE;
+		v = id; //novo vertice
+		printf("Vertice: %d Peso: %d\n", id, menor);
+		k++;
+}
+	for (i=0; i < g->n_vertices-1; i++){
+		for (j=0; j < g->n_vertices-1; j++){
+			printf("Flag[%d][%d]: %d\n",i,j,g->matriz_adj[i][j].flag);
+	}
+}
+
+
+	//Kruskal
+	/*for (i=0; i < g->n_vertices; i++){
+			for (j=0; j < g->n_vertices; j++){
+				if (g->matriz_adj[i][j].adj){ // verifica se existe a adjacencia
+				w = g->matriz_adj[v][j].weight;
+				menor = menor > w ? w : menor; // condição de definição do menor
+			}
+		}
+	}*/
+	//printf("adj: %d - weight: %d", g->matriz_adj[0][1].adj, g->matriz_adj[0][1].weight);
+	puts("Passei pelo PRIMS\n");
+}
+
 void libera_grafo (grafo_t *g){
 	int i;
 
@@ -100,17 +159,32 @@ int cria_adjacencia(grafo_t *g, int u, int v, int w, char *p1, char *p2){
 		return FALSE;
 	}
 
-	if (u > g->n_vertices || v > g->n_vertices )
+	if (u > g->n_vertices || v > g->n_vertices ){
 		return FALSE;
+	}
 
 	g->matriz_adj[u][v].weight = w; 
-	g->vertices[u].string1 = p1;
-	g->vertices[v].string2 = p2; 
+	g->matriz_adj[v][u].weight = w;
+	//g->matriz_adj[u][v].flag = FALSE;
+	//g->vertices[u].ip = p1;
+	//g->vertices[v].mac = p2; 
 	g->matriz_adj[u][v].adj = TRUE;
+	g->matriz_adj[v][u].adj = TRUE;
 
 	return TRUE;
 }
 
+void vertice_datas(grafo_t *g, int v, char *str1, char *str2, char *str3){ // Leonardo
+	
+	if (g == NULL){
+		perror("libera_grafo");
+		exit(EXIT_FAILURE);
+	}
+	//g->vertices[v].id = v;
+	g->vertices[v].ip = str1;
+	g->vertices[v].mac = str2; 
+	g->vertices[v].gtw = str3; 
+}
 int rem_adjacencia(grafo_t *g, int u, int v){
 
 	if (g == NULL){
@@ -169,8 +243,6 @@ void exportar_grafo_dot(const char *filename, grafo_t *g){ //Leonardo
 //typedef struct vertices vertice_t; // id
 //typedef struct arestas aresta_t; // adj
 //typedef struct grafos grafo_t;//n_vertices vertice_t *vertices; aresta_t **matriz_adj;	
-	vertice_t *v;
-	aresta_t *a;
 	//obter_dado(no);
 	//g->vertices[i].string1
 
@@ -182,6 +254,12 @@ void exportar_grafo_dot(const char *filename, grafo_t *g){ //Leonardo
 				fprintf(file, "\t%d -- %d [label = %d];\n", i, j, g->matriz_adj[i][j].weight);
 			}
 			printf("[%d] [%d] : %d label[%d]\n", i, j, g->matriz_adj[i][j].adj, g->matriz_adj[i][j].weight);
+		}
+	}
+	for (i=0; i < g->n_vertices; i++){
+		if(g->vertices[i].ip == NULL){
+		}else{
+			printf("V(%d) -> %s : %s : %s\n", i, g->vertices[i].ip, g->vertices[i].mac, g->vertices[i].gtw);
 		}
 	}
 	fprintf(file, "}\n");

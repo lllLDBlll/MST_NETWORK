@@ -42,21 +42,25 @@ int main(void) {
     //Usar rem_adjacencia(); e também adjacente(grafo_t *g, int u, int v){
     //Verificar as variaveis nas structs
     //acrescentar no struct vertice id a posição dos vertices adj em arestar tambem
-	cria_adjacencia(g, 0, 1, 10, "IP: 192.168.0.254", "IP: 192.168.0.200");
+
+	cria_adjacencia(g, 0, 1, 10, "nothing", "nothing");
 	elemento = cria_no((void*)ip);
     add_cauda(lista, elemento);
 
-	cria_adjacencia(g, 1, 2, 20, "IP: 192.168.0.88", "IP: 192.168.0.100");
+	cria_adjacencia(g, 0, 2, 20, "nothing", "nothing");
 	elemento = cria_no((void*)mask);
     add_cauda(lista, elemento);
 
-	cria_adjacencia(g, 2, 3, 5, ip, mac);
+	cria_adjacencia(g, 1, 2, 5, ip, mac);
 	elemento = cria_no((void*)mac);
     add_cauda(lista, elemento);
+    
+    vertice_datas(g, 0, "IP: 192.168.0.254/24", "MAC: 00:1D:B3:09:85:15", "GATEWAY: 192.168.0.1/24");
+    vertice_datas(g, 1, "IP: 192.168.0.100/24", "MAC: 00:1C:B9:09:23:17", "GATEWAY: 192.168.0.1/24");
+    vertice_datas(g, 2, "IP: 192.168.0.4/24", "MAC: 00:3C:A3:02:85:16", "GATEWAY: 192.168.0.1/24");
+    //vertice_datas(g, 3, "IP: 192.168.0.4/24", "MAC: 00:3C:A3:02:85:16", "GATEWAY: 192.168.0.1/24");
 
-	cria_adjacencia(g, 3, 1, 1, ip, mac);
-	elemento = cria_no((void*)test);
-    add_cauda(lista, elemento);
+	prims(g, 0);
 
   	imprimi_lista(lista);
   	exportar_grafo_dot("Rapaz.txt", g); //graph.dot
