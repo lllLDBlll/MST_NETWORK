@@ -196,7 +196,7 @@ int cria_adjacencia(grafo_t *g, int u, int v, int w){
 	return TRUE;
 }
 
-void vertice_datas(grafo_t *g, int v, char *str1, char *str2, char *str3){ // Leonardo
+void vertice_dados(grafo_t *g, int v, char *str1, char *str2, char *str3){ // Leonardo
 
 	if (g == NULL){
 		perror("vertice_datas");
@@ -233,7 +233,7 @@ int rem_adjacencia(grafo_t *g, int u, int v){
 	return TRUE;
 }
 
-int adjacente(grafo_t *g, int u, int v){
+int adjacente(grafo_t *g, int u, int v){ // retorna se existe adjacencia
 
 	if (u > MAX_VERTICES || v > MAX_VERTICES)
 		return FALSE;
@@ -241,7 +241,7 @@ int adjacente(grafo_t *g, int u, int v){
 	return ((g->matriz_adj[u][v].adj) || (g->matriz_adj[v][u].adj));
 }
 
-int adjacente_w(grafo_t *g, int u, int v){
+int adjacente_w(grafo_t *g, int u, int v){ // retorna o peso
 
 	if (u > MAX_VERTICES || v > MAX_VERTICES)
 		return FALSE;
@@ -295,49 +295,71 @@ void exportar_grafo_dot(const char *filename, grafo_t *g){ //Leonardo
 	fclose(file);
 }
 
-void importar_grafo(const char *filename){ //Leonardo
-/*
+void importar_dados(const char *filename, grafo_t *g){
+	
 	FILE *file;
+	int v;
+	char *ip, *mac, *gtw;
 
-	if (filename == NULL || g == NULL){
-		fprintf(stderr, "exportar_grafo_dot: ponteiros invalidos\n");
+ 	ip = (char*)calloc(100,sizeof(char));
+ 	mac = (char*)calloc(100,sizeof(char)); 
+ 	gtw = (char*)calloc(100,sizeof(char)); 
+
+	if (filename == NULL ||g == NULL){
+		fprintf(stderr, "importar_dados: ponteiros invalidos\n");
+		system("pause");
 		exit(EXIT_FAILURE);
 	}
 
-	file = fopen(filename, "w");
+	file = fopen(filename, "r");
 
 	if (file == NULL){
-		perror("exportar_grafo_dot:");
+		perror("importar_dados:");
+		system("pause");
 		exit(EXIT_FAILURE);
 	}
 
-	fprintf(file, "graph {\n");
-
-	int i=0, j=0;
-	for (i; i < g->n_vertices; i++){
-		for (j; j < g->n_vertices; j++){
-			if(g->matriz_adj[i][j].adj == 0){
-			}else{
-				if(i!=j){
-					fprintf(file, "\t%d -- %d [label = %d];\n", i, j, g->matriz_adj[i][j].weight);
-				}
-			}
-			if(i!=j){
-				printf("[%d] [%d] : %d label[%d]\n", i, j, g->matriz_adj[i][j].adj, g->matriz_adj[i][j].weight);
-			}
-		}
-		j = i+1;
+	while(!feof(file)){
+		fscanf(file,"%d,%[^,],%[^,],%s\n", &v, ip, mac, gtw);
+		printf("%d,%s,%s,%s\n", v, ip, mac, gtw);
+		/*printf("IP: %s\n", ip);
+		printf("MAC: %s\n", mac);
+		printf("GTW: %s\n", gtw);*/
+		vertice_dados(g, v, ip, mac, gtw);
 	}
-
-	for (i=0; i < g->n_vertices; i++){
-		if(g->vertices[i].ip == NULL || g->vertices[i].mac == NULL || g->vertices[i].gtw == NULL){
-		}else{
-			printf("V(%d) -> %s : %s : %s\n", i, g->vertices[i].ip, g->vertices[i].mac, g->vertices[i].gtw);
-		}
-	}
-
-	fprintf(file, "}\n");
-
+	
+	printf("Dados Importados!\n");
 	fclose(file);
-	*/
+	 //vertice_dados(g, 4, "IP: 192.168.0.4/00", "MAC: 0000000000000000", "GATEWAY: 192.168.0.1/24");
+		 //fgets (mystring , 100 , pFile) != NULL )
+}
+
+
+void importar_grafo(const char *filename, grafo_t *g){ //Leonardo
+
+	FILE *file;
+	int u, v, w;
+
+	if (filename == NULL ||g == NULL){
+		fprintf(stderr, "importar_grafo: ponteiros invalidos\n");
+		system("pause");
+		exit(EXIT_FAILURE);
+	}
+
+	file = fopen(filename, "r");
+
+	if (file == NULL){
+		perror("importar_grafo:");
+		system("pause");
+		exit(EXIT_FAILURE);
+	}
+
+	while(!feof(file)){
+		fscanf(file,"%d,%d,%d\n", &u, &v, &w);
+		printf("%d,%d,%d\n", u, v, w);
+		cria_adjacencia(g, u, v, w);
+	}
+
+	printf("Grafo Importado!\n");
+	fclose(file);
 }

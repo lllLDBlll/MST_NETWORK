@@ -20,7 +20,7 @@ int main(void) {
 	int i,j;
 	grafo_t *g;
 
-	g = cria_grafo(5); //Número de vertices
+	g = cria_grafo(6); //Número de vertices
 
 	//no_t* elemento = NULL;
     //lista_enc_t* lista = NULL;
@@ -40,12 +40,12 @@ int main(void) {
     //Usar rem_adjacencia(); e também adjacente(grafo_t *g, int u, int v){
     //Verificar as variaveis nas structs
     //acrescentar no struct vertice id a posição dos vertices adj em arestar tambem
-
-    vertice_datas(g, 0, "IP: 192.168.0.254/24", "MAC: 00:1D:B3:09:85:15", "GATEWAY: 192.168.0.1/24");
-    vertice_datas(g, 1, "IP: 192.168.0.100/24", "MAC: 00:1C:B9:09:23:17", "GATEWAY: 192.168.0.1/24");
-    vertice_datas(g, 2, "IP: 192.168.0.4/33", "MAC: 3333333333333333", "GATEWAY: 192.168.0.1/24");
-    vertice_datas(g, 3, "IP: 192.168.0.4/11", "MAC: 1111111111111111", "GATEWAY: 192.168.0.1/24");
-    vertice_datas(g, 4, "IP: 192.168.0.4/00", "MAC: 0000000000000000", "GATEWAY: 192.168.0.1/24");
+/*
+    vertice_dados(g, 0, "IP: 192.168.0.254/24", "MAC: 00:1D:B3:09:85:15", "GATEWAY: 192.168.0.1/24");
+    vertice_dados(g, 1, "IP: 192.168.0.100/24", "MAC: 00:1C:B9:09:23:17", "GATEWAY: 192.168.0.1/24");
+    vertice_dados(g, 2, "IP: 192.168.0.4/33", "MAC: 3333333333333333", "GATEWAY: 192.168.0.1/24");
+    vertice_dados(g, 3, "IP: 192.168.0.4/11", "MAC: 1111111111111111", "GATEWAY: 192.168.0.1/24");
+    vertice_dados(g, 4, "IP: 192.168.0.4/00", "MAC: 0000000000000000", "GATEWAY: 192.168.0.1/24");
 
 	cria_adjacencia(g, 0, 1, 13);
 	cria_adjacencia(g, 0, 2, 15);
@@ -57,6 +57,9 @@ int main(void) {
     cria_adjacencia(g, 2, 3, 8);
     cria_adjacencia(g, 2, 4, 11);
     cria_adjacencia(g, 3, 4, 12);
+*/
+    importar_grafo("grafo_input.txt", g);
+  	importar_dados("dados.txt", g);
 
   	exportar_grafo_dot("grafo_output.txt", g); //graph.dot
 
@@ -71,9 +74,6 @@ int main(void) {
 			printf("[%d] [%d] : %d label[%d]\n", i,j, adjacente(g,i,j), adjacente_w(g, i, j));
 	}*/
   	
-  	//importar_grafo("grafo_input.txt");
-  	//importar_datas("datas.txt");
-
 	libera_grafo(g);
 	system("pause");
 	return EXIT_SUCCESS;
