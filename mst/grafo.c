@@ -95,33 +95,39 @@ void prims(grafo_t *g, int v){
 		exit(EXIT_FAILURE);
 	}
 	int k=0;
-	while(k != g->n_vertices-1){
+	while(k != g->n_vertices){
 		uint8_t w, id, menor = 0xFF;
-		for (i=0; i < g->n_vertices-1; i++){
+		for (i=0; i < g->n_vertices; i++){
+			//printf("vertice flag: %d\n",g->vertices[i].flag);
 			w = g->matriz_adj[v][i].weight;
 			//printf("Peso: %d; Bool: %d\n",w,g->matriz_adj[v][i].adj);
-			if ((g->matriz_adj[v][i].adj == 1) && (g->matriz_adj[v][i].flag == 0)){ // verifica se existe a adjacencia
+			if ((g->matriz_adj[v][i].adj == 1) && (g->matriz_adj[v][i].flag == 0) && (g->vertices[i].flag == 0)){ // verifica se existe a adjacencia
 				//menor = menor > w ? w : menor; // condição de definição do menor
 				if (menor > w ){
 					menor = w;
 					id = i; // vertice adjacente com o menor peso na aresta
 				}
+				//printf("menor: %d\n", menor);
 				//printf("i:%d\n",i);
 			}
 			//printf("%d\n",menor);
 		}
 		g->matriz_adj[v][id].flag = TRUE;
 		g->matriz_adj[id][v].flag = TRUE;
+		g->vertices[v].flag = TRUE;
+		g->vertices[id].flag = TRUE;
 		v = id; //novo vertice
-		printf("Vertice: %d Peso: %d\n", id, menor);
+		if(menor != 0xFF){
+			printf("Vertice: %d Peso: %d\n", id, menor);
+		}
 		k++;
 }
-	for (i=0; i < g->n_vertices-1; i++){
-		for (j=0; j < g->n_vertices-1; j++){
+	/*for (i=0; i < g->n_vertices; i++){
+		for (j=0; j < g->n_vertices; j++){
 			printf("Flag[%d][%d]: %d\n",i,j,g->matriz_adj[i][j].flag);
 	}
 }
-
+*/
 
 	//Kruskal
 	/*for (i=0; i < g->n_vertices; i++){
@@ -133,7 +139,7 @@ void prims(grafo_t *g, int v){
 		}
 	}*/
 	//printf("adj: %d - weight: %d", g->matriz_adj[0][1].adj, g->matriz_adj[0][1].weight);
-	puts("Passei pelo PRIMS\n");
+
 }
 
 void libera_grafo (grafo_t *g){
@@ -177,9 +183,15 @@ int cria_adjacencia(grafo_t *g, int u, int v, int w, char *p1, char *p2){
 void vertice_datas(grafo_t *g, int v, char *str1, char *str2, char *str3){ // Leonardo
 	
 	if (g == NULL){
-		perror("libera_grafo");
+		perror("vertice_datas");
 		exit(EXIT_FAILURE);
 	}
+
+	if (v > g->n_vertices){
+		perror("v - vertice_datas");
+		exit(EXIT_FAILURE);
+	}
+
 	//g->vertices[v].id = v;
 	g->vertices[v].ip = str1;
 	g->vertices[v].mac = str2; 
@@ -218,13 +230,7 @@ int adjacente_w(grafo_t *g, int u, int v){
 void exportar_grafo_dot(const char *filename, grafo_t *g){ //Leonardo
 
 	FILE *file;
-/*
-	vertice_t *vertices;
-	aresta_t *aresta;
-	lista_enc_t *lista_arestas;
 
-	int peso;
-*/
 	if (filename == NULL || g == NULL){
 		fprintf(stderr, "exportar_grafo_dot: ponteiros invalidos\n");
 		exit(EXIT_FAILURE);
@@ -239,22 +245,20 @@ void exportar_grafo_dot(const char *filename, grafo_t *g){ //Leonardo
 
 	fprintf(file, "graph {\n");
 
-	//TESTANDO
-//typedef struct vertices vertice_t; // id
-//typedef struct arestas aresta_t; // adj
-//typedef struct grafos grafo_t;//n_vertices vertice_t *vertices; aresta_t **matriz_adj;	
-	//obter_dado(no);
-	//g->vertices[i].string1
-
-	int i, j;
-	for (i=0; i < g->n_vertices; i++){
-		for (j=0; j < g->n_vertices; j++){
+	int i=0, j=0;
+	for (i; i < g->n_vertices; i++){
+		for (j; j < g->n_vertices; j++){
 			if(g->matriz_adj[i][j].adj == 0){
 			}else{
-				fprintf(file, "\t%d -- %d [label = %d];\n", i, j, g->matriz_adj[i][j].weight);
+				if(i!=j){
+					fprintf(file, "\t%d -- %d [label = %d];\n", i, j, g->matriz_adj[i][j].weight);
+				}
 			}
-			printf("[%d] [%d] : %d label[%d]\n", i, j, g->matriz_adj[i][j].adj, g->matriz_adj[i][j].weight);
+			if(i!=j){
+				printf("[%d] [%d] : %d label[%d]\n", i, j, g->matriz_adj[i][j].adj, g->matriz_adj[i][j].weight);
+			}
 		}
+		j=i+1;
 	}
 	for (i=0; i < g->n_vertices; i++){
 		if(g->vertices[i].ip == NULL){
@@ -264,47 +268,5 @@ void exportar_grafo_dot(const char *filename, grafo_t *g){ //Leonardo
 	}
 	fprintf(file, "}\n");
 
-	//fprintf(file, "\t%d -- %d [label = %d];\n",
-	//	vertice_get_id(vertice), vertice_get_id(adjacente), peso);
-
-
-	//obtem todos os nos da lista
-	/*no_vert = obter_cabeca(grafo->vertices);
-	while (no_vert){
-		vertice = obter_dado(no_vert);
-
-		//obtem todos as arestas
-		lista_arestas = vertice_get_arestas(vertice);
-
-		no_arest = obter_cabeca(lista_arestas);
-		while (no_arest) {
-			aresta = obter_dado(no_arest);
-
-			//ignora caso já exportada
-			if (aresta_get_status(aresta) == EXPORTADA) {
-				no_arest = obtem_proximo(no_arest);
-				continue;
-			}
-
-			//marca como exportada esta aresta
-			aresta_set_status(aresta, EXPORTADA);
-			adjacente = aresta_get_adjacente(aresta);
-
-			//marca contra-aresta também como exporta no caso de grafo não direcionados
-			contra_aresta = procurar_adjacente(adjacente, vertice);
-			aresta_set_status(contra_aresta, EXPORTADA);
-
-			//obtem peso
-			peso = aresta_get_peso(aresta);
-			// verice -- vertice [label = "Valor"];
-			fprintf(file, "\t%d -- %d [label = %d];\n",
-					vertice_get_id(vertice),
-					vertice_get_id(adjacente),
-					peso);
-
-			no_arest = obtem_proximo(no_arest);
-		}
-		no_vert = obtem_proximo(no_vert);
-	}*/
 	fclose(file);
 }

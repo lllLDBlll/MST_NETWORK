@@ -20,7 +20,7 @@ int main(void) {
 	int i,j;
 	grafo_t *g;
 
-	g = cria_grafo(4); //Número de vertices
+	g = cria_grafo(5); //Número de vertices
 
 	/*    Adicionar arestas    */
 	/* 		Leonardo           */
@@ -43,26 +43,21 @@ int main(void) {
     //Verificar as variaveis nas structs
     //acrescentar no struct vertice id a posição dos vertices adj em arestar tambem
 
-	cria_adjacencia(g, 0, 1, 10, "nothing", "nothing");
-	elemento = cria_no((void*)ip);
-    add_cauda(lista, elemento);
-
-	cria_adjacencia(g, 0, 2, 20, "nothing", "nothing");
-	elemento = cria_no((void*)mask);
-    add_cauda(lista, elemento);
-
-	cria_adjacencia(g, 1, 2, 5, ip, mac);
-	elemento = cria_no((void*)mac);
-    add_cauda(lista, elemento);
-    
     vertice_datas(g, 0, "IP: 192.168.0.254/24", "MAC: 00:1D:B3:09:85:15", "GATEWAY: 192.168.0.1/24");
     vertice_datas(g, 1, "IP: 192.168.0.100/24", "MAC: 00:1C:B9:09:23:17", "GATEWAY: 192.168.0.1/24");
     vertice_datas(g, 2, "IP: 192.168.0.4/24", "MAC: 00:3C:A3:02:85:16", "GATEWAY: 192.168.0.1/24");
-    //vertice_datas(g, 3, "IP: 192.168.0.4/24", "MAC: 00:3C:A3:02:85:16", "GATEWAY: 192.168.0.1/24");
+    vertice_datas(g, 3, "IP: 192.168.0.4/24", "MAC: 00:3C:A3:02:85:16", "GATEWAY: 192.168.0.1/24");
+    vertice_datas(g, 4, "IP: 192.168.0.4/24", "MAC: 00:3C:A3:02:85:16", "GATEWAY: 192.168.0.1/24");
+
+	cria_adjacencia(g, 0, 1, 10, "nothing", "nothing");
+	cria_adjacencia(g, 0, 2, 20, "nothing", "nothing");
+	cria_adjacencia(g, 1, 2, 5, ip, mac);
+    cria_adjacencia(g, 2, 3, 10, "nothing", "nothing");
+    cria_adjacencia(g, 4, 3, 30, "nothing", "nothing");
+    cria_adjacencia(g, 0, 3, 90, "nothing", "nothing");
 
 	prims(g, 0);
-
-  	imprimi_lista(lista);
+	
   	exportar_grafo_dot("Rapaz.txt", g); //graph.dot
 
 	/* Imprimi matriz */
