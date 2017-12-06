@@ -24,20 +24,24 @@ int main(void) {
 
 	grafo_t *g;
 
-	g = cria_grafo(6); //Número de vertices
-
     char *ip = "IP: 192.168.0.254";
     char *mask = "Mask: 255.255.255.0";
     char *mac = "MAC: 00:1C:B3:09:85:15";
 
-	cria_adj_dados(1, g); // seleciona o metodo de entrada dos dados 0 para manual 1 para arquivos
+	g = cria_grafo(6); //Número de vertices
+	cria_adj_dados(0, g); // seleciona o metodo de entrada dos dados 0 para manual 1 para arquivos
 
-  	exportar_grafo_dot("grafo_output.txt", g); //graph.dot
+  	exportar_grafo_dot("grafo_prims.txt", g); //graph.dot
 
-	//prims(g, 3);
-	kruskal(g);
+	prims(g, 0);
+	exportar_grafo_dot("tree_prims.txt", g);
 
-  	exportar_grafo_dot("tree_mst.txt", g); //graph.dot
+	g = cria_grafo(6); //Número de vertices
+	cria_adj_dados(0, g); // seleciona o metodo de entrada dos dados 0 para manual 1 para arquivos
+
+  	exportar_grafo_dot("grafo_kruskal.txt", g); //graph.dot
+	kruskal(g, 5); // grafo e numero de vertices
+  	exportar_grafo_dot("tree_kruskal.txt", g);
 
 	/*Imprimi matriz 
 	int m = 5; // tamanho da matriz quadrada

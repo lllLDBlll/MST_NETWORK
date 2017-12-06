@@ -18,7 +18,7 @@ void vertice_dados(grafo_t *g, int v, char *str1, char *str2, char *str3); // Le
 int rem_adjacencia(grafo_t *g, int u, int v);
 int adjacente(grafo_t *g, int u, int v);
 void prims(grafo_t *g, int v);
-void kruskal(grafo_t *g);
+void kruskal(grafo_t *g, int n);
 int adjacente_w(grafo_t *g, int u, int v); // Leonardo
 void exportar_grafo_dot(const char *filename, grafo_t *g); //Leonardo
 void importar_grafo(const char *filename, grafo_t *g); //Leonardo

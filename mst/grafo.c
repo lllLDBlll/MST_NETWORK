@@ -138,58 +138,44 @@ void prims(grafo_t *g, int v){
 	}
 }
 
-void kruskal(grafo_t *g){
+void kruskal(grafo_t *g, int n){
 
 	if (g == NULL){
 		perror("prims");
 		exit(EXIT_FAILURE);
 	}
 
-	int i=0, j=0, k=0, v=0, u=0;
-
-	while(k != g->n_vertices){
+	int i, j, k=0, v=0, u=0;
+	while(k != n-1){
 		int w, menor = INT_MAX;
-		for (i; i < g->n_vertices; i++){
-			for (j; j < g->n_vertices; j++){
-				if (adjacente(g, i, j) && g->matriz_adj[i][j].flag == 0){
-					w = adjacente_w(g, i, j);
+		for (i=0; i < n; i++){
+			for (j=0; j < n; j++){
+				w = adjacente_w(g, i, j);
+				if ((adjacente(g, i, j)) && (g->matriz_adj[i][j].flag == 0) /*&& (g->vertices[i].flag == 0)*/){
 					menor = menor > w ? w : menor; // condição de definição do menor
-					v = i;
-					u = j;
+					if(menor == w){
+						v = i;
+						u = j;
+					}
 				}
 			}
-			//j = i+1;
 		}
-		g->matriz_adj[v][u].flag == TRUE;
-		printf("flag: %d v: %d u:%d\n", g->matriz_adj[v][u].flag, v, u);
 		k++;
+		printf("peso: %d v: %d u:%d\n", menor, v, u);
+		g->matriz_adj[v][u].flag = TRUE; // marca a adjacencia com o menor peso // criar função de flag
+		g->matriz_adj[u][v].flag = TRUE; // marca a adjacencia com o menor peso
 	}
 
-	//Print flag
-	printf("----------------------\n----------------------\n----------------------\n");
 	for (i=0; i < g->n_vertices; i++){
 		for (j=0; j < g->n_vertices; j++){
-			/*g->matriz_adj[i][j].adj = FALSE;
+			g->matriz_adj[i][j].adj = FALSE;
 			if(g->matriz_adj[i][j].flag){
 				g->matriz_adj[i][j].adj = TRUE;
-			}*/
-			printf("Flag[%d][%d]: %d\n", i, j, g->matriz_adj[i][j].flag);
+			}
+			//printf("Flag[%d][%d]: %d\n", i, j, g->matriz_adj[i][j].flag);
 		}
 	}
-	//Kruskal
-	/*for (i=0; i < g->n_vertices; i++){
-			for (j=0; j < g->n_vertices; j++){
-				if (g->matriz_adj[i][j].adj){ // verifica se existe a adjacencia
-				w = g->matriz_adj[v][j].weight;
-				menor = menor > w ? w : menor; // condição de definição do menor
-			}
-		}
-	}*/
-	//printf("adj: %d - weight: %d", g->matriz_adj[0][1].adj, g->matriz_adj[0][1].weight);
-
 }
-
-
 
 void libera_grafo (grafo_t *g){
 	int i;
