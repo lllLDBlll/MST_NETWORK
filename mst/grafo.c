@@ -1,10 +1,3 @@
-/*
- * grafo.c
- *
- *  Created on: Nov 18, 2016
- *      Author: xtarke
- */
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -81,7 +74,7 @@ grafo_t *cria_grafo(int vertices){
 }
 
 void prims(grafo_t *g, int v){
-	int i, j, *flag;
+	int i, j;
 	//aresta_t **matriz_adj;
 
 	if (g == NULL){
@@ -93,6 +86,7 @@ void prims(grafo_t *g, int v){
 		perror("prims vertices");
 		exit(EXIT_FAILURE);
 	}
+
 	int k=0;
 	while(k != g->n_vertices){
 		uint8_t w, id, menor = 0xFF;
@@ -142,9 +136,46 @@ void prims(grafo_t *g, int v){
 			printf("Flag[%d][%d]: %d\n", i, j, g->matriz_adj[i][j].flag);
 		}
 	}
+}
 
+void kruskal(grafo_t *g){
 
+	if (g == NULL){
+		perror("prims");
+		exit(EXIT_FAILURE);
+	}
 
+	int i=0, j=0, k=0, v=0, u=0;
+
+	while(k != g->n_vertices){
+		int w, menor = INT_MAX;
+		for (i; i < g->n_vertices; i++){
+			for (j; j < g->n_vertices; j++){
+				if (adjacente(g, i, j) && g->matriz_adj[i][j].flag == 0){
+					w = adjacente_w(g, i, j);
+					menor = menor > w ? w : menor; // condição de definição do menor
+					v = i;
+					u = j;
+				}
+			}
+			//j = i+1;
+		}
+		g->matriz_adj[v][u].flag == TRUE;
+		printf("flag: %d v: %d u:%d\n", g->matriz_adj[v][u].flag, v, u);
+		k++;
+	}
+
+	//Print flag
+	printf("----------------------\n----------------------\n----------------------\n");
+	for (i=0; i < g->n_vertices; i++){
+		for (j=0; j < g->n_vertices; j++){
+			/*g->matriz_adj[i][j].adj = FALSE;
+			if(g->matriz_adj[i][j].flag){
+				g->matriz_adj[i][j].adj = TRUE;
+			}*/
+			printf("Flag[%d][%d]: %d\n", i, j, g->matriz_adj[i][j].flag);
+		}
+	}
 	//Kruskal
 	/*for (i=0; i < g->n_vertices; i++){
 			for (j=0; j < g->n_vertices; j++){
@@ -157,6 +188,8 @@ void prims(grafo_t *g, int v){
 	//printf("adj: %d - weight: %d", g->matriz_adj[0][1].adj, g->matriz_adj[0][1].weight);
 
 }
+
+
 
 void libera_grafo (grafo_t *g){
 	int i;
