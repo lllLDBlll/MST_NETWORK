@@ -13,9 +13,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "grafo.h"
-#include "lista_enc.h" // Leonardo
-#include "no.h"	// Leonardo
+#include "src/grafo.h"
+//#include "src/lista_enc.h" // Leonardo
+//#include "src/no.h"	// Leonardo
 
 void cria_adj_dados(bool input, grafo_t *g);
 
@@ -28,28 +28,24 @@ int main(void) {
     char *mask = "Mask: 255.255.255.0";
     char *mac = "MAC: 00:1C:B3:09:85:15";
 
-	g = cria_grafo(6); //Número de vertices
-	cria_adj_dados(0, g); // seleciona o metodo de entrada dos dados 0 para manual 1 para arquivos
+	g = cria_grafo(6); // cria grafo passando o número de vertices
+	cria_adj_dados(0, g); // 0 - Entrada Manual || 1 - Importar de Arquivo
 
-  	exportar_grafo_dot("grafo_prims.txt", g); //graph.dot
+  	exportar_grafo_dot("prims_g.txt", g); // exporta grafo de entrada para prims
 
 	prims(g, 0);
-	exportar_grafo_dot("tree_prims.txt", g);
 
-	g = cria_grafo(6); //Número de vertices
-	cria_adj_dados(0, g); // seleciona o metodo de entrada dos dados 0 para manual 1 para arquivos
+	exportar_grafo_dot("prims_t.txt", g); // exporta árvore de prims
+/**************************************************************************************/
+	g = cria_grafo(6);
+	cria_adj_dados(0, g);
 
-  	exportar_grafo_dot("grafo_kruskal.txt", g); //graph.dot
-	kruskal(g, 5); // grafo e numero de vertices
-  	exportar_grafo_dot("tree_kruskal.txt", g);
+  	exportar_grafo_dot("kruskal_g.txt", g); // exporta grafo de entrada para kruskal
 
-	/*Imprimi matriz 
-	int m = 5; // tamanho da matriz quadrada
-	for (i=0; i < m; i++){
-		for (j=0; j < m; j++)
-			printf("[%d] [%d] : %d label[%d]\n", i,j, adjacente(g,i,j), adjacente_w(g, i, j));
-	}
-  	*/
+	kruskal(g, 5); // grafo e numero de vertice s
+
+  	exportar_grafo_dot("kruskal_t.txt", g); // exporta árvore de kruskal
+
 	libera_grafo(g);
 	system("pause");
 	return EXIT_SUCCESS;
@@ -78,3 +74,11 @@ void cria_adj_dados(bool input, grafo_t *g){
 	    cria_adjacencia(g, 3, 4, 12);
 	}
 }
+
+	/*Imprimi matriz 
+	int m = 5; // tamanho da matriz quadrada
+	for (i=0; i < m; i++){
+		for (j=0; j < m; j++)
+			printf("[%d] [%d] : %d label[%d]\n", i,j, adjacente(g,i,j), adjacente_w(g, i, j));
+	}
+  	*/

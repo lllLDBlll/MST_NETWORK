@@ -1,3 +1,2 @@
-gcc -g .\grafo.c .\main.c .\lista_enc.c .\no.c -o main.exe
-echo Compilation End!
+gcc -g .\src\grafo.c .\main.c -o main.exe
 pause

@@ -4,8 +4,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "grafo.h"
-#include "lista_enc.h" // Leonardo
-#include "no.h"	// Leonardo
+//#include "src/lista_enc.h" // Leonardo
+//#include "src/no.h"	// Leonardo
 
 struct vertices {
 	int id;

@@ -1,0 +1,2 @@
+Kruskal - Adiciona a MST por ordem de menor peso até todos serem conectados
+Prim's - Começa de um vertice selecionado e adiciona as arestas adjacentes com menor peso
