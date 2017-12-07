@@ -20,33 +20,40 @@
 void cria_adj_dados(bool input, grafo_t *g);
 
 int main(void) {
-	int i,j;
+	printf("Welcome to MST - Minimum Spanning Tree of Computer's Network\n");
+	printf("Author: Leonardo Domingos Batista\n\n");
 
 	grafo_t *g;
+	grafo_t *h;
 
     char *ip = "IP: 192.168.0.254";
     char *mask = "Mask: 255.255.255.0";
     char *mac = "MAC: 00:1C:B3:09:85:15";
-
+	
 	g = cria_grafo(6); // cria grafo passando o número de vertices
-	cria_adj_dados(0, g); // 0 - Entrada Manual || 1 - Importar de Arquivo
+	h = cria_grafo(6);
 
+	cria_adj_dados(1, g); // 0 - Entrada Manual || 1 - Importar de Arquivo
+	cria_adj_dados(1, h);
+	
+	printf("Grafo de entrada Prims:\n");
   	exportar_grafo_dot("prims_g.txt", g); // exporta grafo de entrada para prims
 
-	prims(g, 0);
+  	printf("\nGrafo de entrada Kruskal:\n");
+  	exportar_grafo_dot("kruskal_g.txt", h); // exporta grafo de entrada para kruskal
 
+	prims(g, 5); //(grafo, vertice)
+	kruskal(h); // (grafo)
+
+	printf("\nArvore de saida Prims:\n");
 	exportar_grafo_dot("prims_t.txt", g); // exporta árvore de prims
-/**************************************************************************************/
-	g = cria_grafo(6);
-	cria_adj_dados(0, g);
 
-  	exportar_grafo_dot("kruskal_g.txt", g); // exporta grafo de entrada para kruskal
-
-	kruskal(g, 5); // grafo e numero de vertice s
-
-  	exportar_grafo_dot("kruskal_t.txt", g); // exporta árvore de kruskal
+	printf("\nArvore de saida Kruskal:\n");
+  	exportar_grafo_dot("kruskal_t.txt", h); // exporta árvore de kruskal
 
 	libera_grafo(g);
+	libera_grafo(h);
+
 	system("pause");
 	return EXIT_SUCCESS;
 }
