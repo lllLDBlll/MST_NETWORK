@@ -12,7 +12,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-
 #include "src/grafo.h"
 //#include "src/lista_enc.h" // Leonardo
 //#include "src/no.h"	// Leonardo
@@ -29,13 +28,13 @@ int main(void) {
     char *ip = "IP: 192.168.0.254";
     char *mask = "Mask: 255.255.255.0";
     char *mac = "MAC: 00:1C:B3:09:85:15";
-	
+
 	g = cria_grafo(6); // cria grafo passando o número de vertices
 	h = cria_grafo(6);
 
 	cria_adj_dados(1, g); // 0 - Entrada Manual || 1 - Importar de Arquivo
 	cria_adj_dados(1, h);
-	
+
 	printf("Grafo de entrada Prims:\n");
   	exportar_grafo_dot("prims_g.txt", g); // exporta grafo de entrada para prims
 
@@ -68,13 +67,7 @@ void cria_adj_dados(bool input, grafo_t *g){
 	    vertice_dados(g, 2, "IP: 192.168.0.4/33", "MAC: 3333333333333333", "GATEWAY: 192.168.0.1/24");
 	    vertice_dados(g, 3, "IP: 192.168.0.4/11", "MAC: 1111111111111111", "GATEWAY: 192.168.0.1/24");
 	    vertice_dados(g, 4, "IP: 192.168.0.4/00", "MAC: 0000000000000000", "GATEWAY: 192.168.0.1/24");
-/*
-	for (i=0; i < m; i++){
-		for (j=0; j < m; j++){
 
-		}
-	}
-*/
 		cria_adjacencia(g, 0, 1, 13);
 		cria_adjacencia(g, 0, 2, 15);
 		cria_adjacencia(g, 0, 3, 15);
@@ -88,7 +81,7 @@ void cria_adj_dados(bool input, grafo_t *g){
 	}
 }
 
-	/*Imprimi matriz 
+	/*Imprimi matriz
 	int m = 5; // tamanho da matriz quadrada
 	for (i=0; i < m; i++){
 		for (j=0; j < m; j++)

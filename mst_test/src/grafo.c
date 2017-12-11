@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "grafo.h"
+#include "Quick_Sort.h"
 //#include "src/lista_enc.h"
 //#include "src/no.h"
 
@@ -26,6 +27,8 @@ struct arestas {
 
 struct grafos{
 	int n_vertices;
+	//int n_vert; // numero de vertices visitados
+	int n_arestas; // numero de arestas visitadas
 	vertice_t *vertices;
 	aresta_t **matriz_adj;	/* Matriz de adjacencia */
 };
@@ -43,6 +46,7 @@ grafo_t *cria_grafo(int vertices){
 	}
 
 	g->n_vertices = vertices;
+	g->n_arestas = 0;
 	g->vertices = malloc(vertices * sizeof(vertice_t));
 
 	if (g->vertices == NULL){
@@ -82,9 +86,10 @@ void prims(grafo_t *g, int v){
 		perror("prims");
 		exit(EXIT_FAILURE);
 	}
-	
-	if (v > g->n_vertices){
+
+	if (v >= g->n_vertices){
 		perror("prims vertices");
+		system("pause");
 		exit(EXIT_FAILURE);
 	}
 
@@ -114,13 +119,114 @@ void prims(grafo_t *g, int v){
 			}
 		}
 
-		g->matriz_adj[v][id].flag = TRUE;
-		g->matriz_adj[id][v].flag = TRUE;
-		g->vertices[v].flag = TRUE;
-		g->vertices[id].flag = TRUE;
+		//g->matriz_adj[v][id].flag = TRUE;
+		//g->matriz_adj[id][v].flag = TRUE;
+		vert_flag(g, v, id);
+		//g->vertices[v].flag = TRUE;
+		//g->vertices[id].flag = TRUE;
+		arest_flag(g, v, id);
 		v = id; // próximo vertice
 		k++;
 	}
+
+    printf("Prims - Numero de vertices: %d Numero de arestas: %d\n", vert_flag(g,0,0), arest_flag(g,0,0));
+
+	for (i=0; i < g->n_vertices; i++){
+		for (j=0; j < g->n_vertices; j++){
+			g->matriz_adj[i][j].adj = FALSE;
+			if(g->matriz_adj[i][j].flag){
+				g->matriz_adj[i][j].adj = TRUE;
+			}
+			//printf("Flag[%d][%d]: %d\n", i, j, g->matriz_adj[i][j].flag);
+		}
+	}
+
+
+
+}
+
+void kruskal(grafo_t *g){
+
+	if (g == NULL){
+		perror("prims");
+		exit(EXIT_FAILURE);
+	}
+
+	int menor[g->n_arestas], temp, i=0, j=0, w = 0xFFFF;
+
+	//printf("aresta: %d", g->n_arestas);
+
+	for (i=0; i < g->n_vertices; i++){
+		for (j; j < g->n_vertices; j++){
+			w = adjacente_w(g, i, j);
+			if (menor[i] > w && (i != j)){
+				menor[i] = w;
+			}
+		}
+		printf("Menor: %d", menor[i]);
+		j = i + 1;
+	}
+
+
+
+	int k=0, v=0, u=0, l, x = 1, y = 0, cycle=0;
+	while(k != (g->n_vertices)){
+		int w, menor = 0xFFFF;//INT_MAX;
+		for (i=0; i < g->n_vertices; i++){
+			for (j; j < g->n_vertices; j++){
+				if ((adjacente(g, i, j)) && !g->matriz_adj[i][j].flag && (i != j) && (x > y)/* && x > y && !g->vertices[i].flag && !g->vertices[j].flag*/){
+					w = adjacente_w(g, i, j);
+					if(w < menor){// condição de definição do menor
+						menor = w;
+						v = i;
+						u = j;
+						printf("menor: %d\n",menor);
+					}
+				}else{
+					if (x == y){
+						cycle = 1;
+						g->matriz_adj[v][u].flag = FALSE;
+						//x = vert_flag(g, 0, 0);
+						//y = arest_flag(g, 0, 0);
+					//printf("Flag[%d][%d]: %d peso: %d x-vert: %d y-arest: %d \n", v, u,g->matriz_adj[v][u].flag, menor, x, y);
+					}
+
+				}
+                /*if (i == (g->n_vertices - 1) && j == (g->n_vertices - 1)){ // Fim dos For
+                    if (x == y){
+                        puts("X = Y\n");
+						g->matriz_adj[v_old][u_old].flag = FALSE;
+						g->matriz_adj[u_old][v_old].flag = FALSE;
+						printf("v old: %d u old: %d", v_old, u_old);
+						printf("v: %d u:%d peso: %d \n",v, u, menor);
+						printf("Flag[%d][%d]: %d\n", v, u, g->matriz_adj[v][u].flag);
+						
+						g->vertices[v].flag = FALSE;
+						g->vertices[u].flag = FALSE;
+                    }else{
+                   		//x = vert_flag(g, 0, 0);
+                    	//y = arest_flag(g, 0, 0);
+                    }
+                    printf("Flag[%d][%d]: %d\n", v, u, g->matriz_adj[v][u].flag);
+				}*/
+			}
+			j = i + 1;
+		}
+		k++;
+		if (x > y && !cycle){
+			x = vert_flag(g, v, u);
+			y = arest_flag(g, v, u);
+		}else{
+			cycle = 0;
+		}
+		printf("Flag[%d][%d]: %d peso: %d x-vert: %d y-arest: %d \n", v, u, g->matriz_adj[v][u].flag, menor, x, y);
+		/*if (y != x - 1){
+			puts("REMANDO!\n");
+			g->matriz_adj[v][u].flag = FALSE;
+			g->matriz_adj[u][v].flag = FALSE;
+		}*/
+	}
+    printf("Kruskal - Numero de vertices: %d Numero de arestas: %d\n", vert_flag(g,0,0), arest_flag(g,0,0));
 
 	for (i=0; i < g->n_vertices; i++){
 		for (j=0; j < g->n_vertices; j++){
@@ -133,79 +239,51 @@ void prims(grafo_t *g, int v){
 	}
 }
 
-void kruskal(grafo_t *g){
-	if (g == NULL){
-		perror("prims");
-		exit(EXIT_FAILURE);
+int vert_flag(grafo_t *g, int v, int u){
+    int i, j, count=0;
+
+    if (g == NULL){
+        return FALSE;
 	}
-		int v_n=1, a_n=0;
-	int i, j, k=0, v=-1, u=0, l, v_old = 0, cycle=0;;
-	while(k != (g->n_vertices)){
-		int w, menor = 0xFFFF;//INT_MAX;
-		for (i=0; i < g->n_vertices; i++){
-			for (j=0; j < g->n_vertices; j++){
-				w = adjacente_w(g, i, j);
-				if ((adjacente(g, i, j)) && !g->matriz_adj[i][j].flag && (cycle == 0)/*(a_n/2 == v_n-1)/*!g->vertices[i].flag*/){
-					if(w < menor){// condição de definição do menor
-						menor = w;
-						v = i;
-						u = j;
-					}
-				}else{
 
-				}
-			}
-			//j = i + 1;
-			/*if (i == (g->n_vertices-1)){
-				//puts("Just One Shot!");
-				printf("peso: %d v: %d u:%d v_n:%d a_n:%d \n", menor, v, u, v_n/2, a_n/2);
-				g->vertices[u].flag = TRUE;
-				g->vertices[v].flag = TRUE;
-				g->matriz_adj[v][u].flag = TRUE; // marca a adjacencia com o menor peso // criar função de flag
-				g->matriz_adj[u][v].flag = TRUE; // marca a adjacencia com o menor peso
-				//puts("End Show!");
-			}*/
+    if (v == 0 && u == 0){
+            /*nothing*/
+    }else{
+        g->vertices[u].flag = TRUE;
+        g->vertices[v].flag = TRUE;
+    }
+
+    for (i=0; i < g->n_vertices; i++){
+        if (g->vertices[i].flag){
+			count++;
 		}
-		k++;
+	}
 
-		g->vertices[u].flag = TRUE;
-		g->vertices[v].flag = TRUE;
-
-		g->matriz_adj[v][u].flag = TRUE; // marca a adjacencia com o menor peso // criar função de flag
-		g->matriz_adj[u][v].flag = TRUE; // marca a adjacencia com o menor peso
-		
-		/*if (a_n != v_n-1){
-		puts("imuah");
-			g->matriz_adj[v][u].flag = FALSE; // marca a adjacencia com o menor peso // criar função de flag
-			g->matriz_adj[u][v].flag = FALSE; // marca a adjacencia com o menor peso
-			//g->vertices[u].flag = FALSE;
-			//g->vertices[v].flag = FALSE;
-		}*/
-
-		for (i=0; i < g->n_vertices; i++){
-			v_n = v_n + g->vertices[i].flag;
-			for (j=0; j < g->n_vertices; j++){
-				a_n = a_n + g->matriz_adj[i][j].flag;
-			}
-		}
-		a_n = a_n/2;
-		v_n = v_n/2;
-
-		printf("peso: %d v: %d u:%d\n", menor, v, u);
+    return count; // retorna o número de arestas
+}
 
 
+int arest_flag(grafo_t *g, int v, int u){
+    int i, j, count=0;
+    if (g == NULL){
+        return FALSE;
+	}
 
-	}// end while
+    if (v == 0 && u == 0){
+        /*nothing*/
+    }else{
+        g->matriz_adj[v][u].flag = TRUE;
+        //g->matriz_adj[u][v].flag = TRUE;
+    }
 
-	for (i=0; i < g->n_vertices; i++){
+    for (i=0; i < g->n_vertices; i++){
 		for (j=0; j < g->n_vertices; j++){
-			g->matriz_adj[i][j].adj = FALSE;
-			if(g->matriz_adj[i][j].flag){
-				g->matriz_adj[i][j].adj = TRUE;
-			}
-			//printf("Flag[%d][%d]: %d\n", i, j, g->matriz_adj[i][j].flag);
+		    if (g->matriz_adj[i][j].flag){
+                count++;
+		    }
 		}
-	}
+    }
+    return count; // retorna o número de vertices
 }
 
 int vert_v(grafo_t *g){
@@ -243,7 +321,7 @@ void libera_grafo (grafo_t *g){
 	free(g);
 }
 
-int cria_adjacencia(grafo_t *g, int u, int v, int w){
+int cria_adjacencia(grafo_t *g, int v, int u, int w){
 
 	if (g == NULL){
 		return FALSE;
@@ -252,10 +330,11 @@ int cria_adjacencia(grafo_t *g, int u, int v, int w){
 	if (u > g->n_vertices || v > g->n_vertices ){
 		return FALSE;
 	}
-
-	g->matriz_adj[u][v].weight = w; 
+	
+	g->n_arestas++;
+	//g->matriz_adj[u][v].weight = w;
 	g->matriz_adj[v][u].weight = w;
-	g->matriz_adj[u][v].adj = TRUE;
+	//g->matriz_adj[u][v].adj = TRUE;
 	g->matriz_adj[v][u].adj = TRUE;
 
 	return TRUE;
@@ -281,8 +360,8 @@ void vertice_dados(grafo_t *g, int v, char *str1, char *str2, char *str3){
 	}
 
 	g->vertices[v].ip = str1;
-	g->vertices[v].mac = str2; 
-	g->vertices[v].gtw = str3; 
+	g->vertices[v].mac = str2;
+	g->vertices[v].gtw = str3;
 }
 int rem_adjacencia(grafo_t *g, int u, int v){
 
@@ -343,7 +422,7 @@ void exportar_grafo_dot(const char *filename, grafo_t *g){
 				if(i != j){ // Não imprimi o mesmo vertice
 					fprintf(file, "\t%d -- %d [label = %d];\n", i, j, adjacente_w(g,i,j));
 				}
-				if(i != j){ 
+				if(i != j){
 					printf("\t[%d] [%d] : %d label[%d]\n", i, j, adjacente(g,i,j), adjacente_w(g,i,j));
 				}
 			}
@@ -367,14 +446,14 @@ void exportar_grafo_dot(const char *filename, grafo_t *g){
 }
 
 void importar_dados(const char *filename, grafo_t *g){
-	
+
 	FILE *file;
 	int v;
 	char *ip, *mac, *gtw;
 
  	ip = (char*)calloc(100, sizeof(char));
- 	mac = (char*)calloc(100, sizeof(char)); 
- 	gtw = (char*)calloc(100, sizeof(char)); 
+ 	mac = (char*)calloc(100, sizeof(char));
+ 	gtw = (char*)calloc(100, sizeof(char));
 
 	if (filename == NULL ||g == NULL){
 		fprintf(stderr, "importar_dados: ponteiros invalidos\n");
@@ -400,7 +479,7 @@ void importar_dados(const char *filename, grafo_t *g){
 		#endif // DEBUG
 		vertice_dados(g, v, ip, mac, gtw);
 	}
-	
+
 	printf("Dados Importados!\n");
 	fclose(file);
 }
