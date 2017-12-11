@@ -30,11 +30,11 @@ int main(void) {
     char *mask = "Mask: 255.255.255.0";
     char *mac = "MAC: 00:1C:B3:09:85:15";
 	
-	g = cria_grafo(6); // cria grafo passando o número de vertices
-	h = cria_grafo(6);
+	g = cria_grafo(5); // cria grafo passando o número de vertices
+	h = cria_grafo(5);
 
-	cria_adj_dados(1, g); // 0 - Entrada Manual || 1 - Importar de Arquivo
-	cria_adj_dados(1, h);
+	cria_adj_dados(0, g); // 0 - Entrada Manual || 1 - Importar de Arquivo
+	cria_adj_dados(0, h);
 	
 	printf("Grafo de entrada Prims:\n");
   	exportar_grafo_dot("prims_g.txt", g); // exporta grafo de entrada para prims
@@ -42,7 +42,7 @@ int main(void) {
   	printf("\nGrafo de entrada Kruskal:\n");
   	exportar_grafo_dot("kruskal_g.txt", h); // exporta grafo de entrada para kruskal
 
-	prims(g, 5); //(grafo, vertice)
+	prims(g, 2); //(grafo, vertice)
 	kruskal(h); // (grafo)
 
 	printf("\nArvore de saida Prims:\n");

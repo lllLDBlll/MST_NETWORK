@@ -21,6 +21,7 @@ struct arestas {
 	int adj;
 	int weight;
 	bool flag;
+	int adj_t;
 	/* mais informacoes, se necessario */
 };
 
@@ -138,42 +139,69 @@ void kruskal(grafo_t *g){
 		perror("prims");
 		exit(EXIT_FAILURE);
 	}
-		int v_n=1, a_n=0;
-	int i, j, k=0, v=-1, u=0, l, v_old = 0, cycle=0;;
-	while(k != (g->n_vertices)){
+	
+	int v_n=1, a_n=0;
+	int i, j, k=0, v=-1, u=0, u_old = 0, v_old = 0, pmt=0;
+
+	//while(k != (g->n_vertices)){
+	while(a_n != g->n_vertices-1){
 		int w, menor = 0xFFFF;//INT_MAX;
 		for (i=0; i < g->n_vertices; i++){
 			for (j=0; j < g->n_vertices; j++){
 				w = adjacente_w(g, i, j);
-				if ((adjacente(g, i, j)) && !g->matriz_adj[i][j].flag && (cycle == 0)/*(a_n/2 == v_n-1)/*!g->vertices[i].flag*/){
+				if ((adjacente(g, i, j)) && !g->matriz_adj[i][j].flag && !pmt/* g->vertices[i].flag*/){
 					if(w < menor){// condição de definição do menor
 						menor = w;
 						v = i;
 						u = j;
 					}
 				}else{
+					if (pmt != 0){
+
+					}
 
 				}
 			}
 			//j = i + 1;
-			/*if (i == (g->n_vertices-1)){
+			if (i == (g->n_vertices-1)){
+				if (a_n == v_n-1){
+					//cycle = 1;
+					puts("Kinder");
+				}else{
+					puts("PUTS");
+					//printf("peso: %d v: %d u:%d v_n:%d a_n:%d \n", menor, v, u, v_n, a_n);
+					//g->vertices[u].flag = FALSE;
+					//g->vertices[v].flag = FALSE;
+					//v = 0;
+					//u = 0;
+					//cycle = 1;
+				}
+				a_n = arest_flag(g, v, u);
+				v_n = vert_flag(g, v, u);
+
+				if (a_n == v_n){
+					puts("Hello");
+					g->matriz_adj[v][u].adj = FALSE;
+					g->matriz_adj[u][v].adj = FALSE;
+					g->matriz_adj[v][u].flag = FALSE;
+					g->matriz_adj[u][v].flag = FALSE;
+					a_n = arest_flag(g, 0, 0);
+					}
+
 				//puts("Just One Shot!");
-				printf("peso: %d v: %d u:%d v_n:%d a_n:%d \n", menor, v, u, v_n/2, a_n/2);
+				/*printf("peso: %d v: %d u:%d v_n:%d a_n:%d \n", menor, v, u, v_n, a_n);
 				g->vertices[u].flag = TRUE;
 				g->vertices[v].flag = TRUE;
 				g->matriz_adj[v][u].flag = TRUE; // marca a adjacencia com o menor peso // criar função de flag
 				g->matriz_adj[u][v].flag = TRUE; // marca a adjacencia com o menor peso
 				//puts("End Show!");
-			}*/
+			*/}
 		}
 		k++;
-
-		g->vertices[u].flag = TRUE;
-		g->vertices[v].flag = TRUE;
-
-		g->matriz_adj[v][u].flag = TRUE; // marca a adjacencia com o menor peso // criar função de flag
-		g->matriz_adj[u][v].flag = TRUE; // marca a adjacencia com o menor peso
+		//cycle(g, k, g->n_vertices-1);
 		
+
+		//
 		/*if (a_n != v_n-1){
 		puts("imuah");
 			g->matriz_adj[v][u].flag = FALSE; // marca a adjacencia com o menor peso // criar função de flag
@@ -181,21 +209,25 @@ void kruskal(grafo_t *g){
 			//g->vertices[u].flag = FALSE;
 			//g->vertices[v].flag = FALSE;
 		}*/
-
+/*
 		for (i=0; i < g->n_vertices; i++){
 			v_n = v_n + g->vertices[i].flag;
 			for (j=0; j < g->n_vertices; j++){
 				a_n = a_n + g->matriz_adj[i][j].flag;
 			}
-		}
-		a_n = a_n/2;
-		v_n = v_n/2;
+		}*/
 
-		printf("peso: %d v: %d u:%d\n", menor, v, u);
 
+		printf("peso: %d v: %d u:%d v_n:%d a_n:%d \n", menor, v, u, v_n, a_n);
 
 
 	}// end while
+	/*g->matriz_adj[4][5].flag = FALSE;
+	g->matriz_adj[5][4].flag = FALSE;
+	g->matriz_adj[5][1].flag = FALSE;
+	g->matriz_adj[1][5].flag = FALSE;
+*/
+	//cycle(g, 1, 5);
 
 	for (i=0; i < g->n_vertices; i++){
 		for (j=0; j < g->n_vertices; j++){
@@ -207,6 +239,104 @@ void kruskal(grafo_t *g){
 		}
 	}
 }
+
+int cycle(grafo_t *g, int v, int u){
+	int i,j,k;
+	if (!g->vertices[v].flag || !g->vertices[u].flag){
+		puts("Sem Vertice!");
+		return 0;
+	}
+	if (g->matriz_adj[v][u].flag){
+		puts("Chegou!!!!");
+		//return TRUE;
+	}
+
+	for (i=0; i < g->n_vertices; i++){
+		if (g->matriz_adj[v][i].flag){
+			if (v == u){
+				return 0;
+			}
+			cycle(g, i, 0);	
+			puts("ALADIN!");
+		}
+	}
+	/*for (i=0; i < g->n_vertices; i++){
+		for (j=0; j < g->n_vertices; j++){
+			for (k=0; k < g->n_vertices; k++){
+				if (g->matriz_adj[i][j].flag){
+					if (g->matriz_adj[j][k].flag){
+						if (g->matriz_adj[k][i].flag){
+							puts("ALADIN!");
+						}
+					}
+				}
+			}
+		}
+	}*/
+		
+}
+
+int vert_flag(grafo_t *g, int v, int u){
+    int i, j, count=0;
+
+    if (g == NULL){
+        return FALSE;
+	}
+
+    if (v == 0 && u == 0){
+            /*nothing*/
+    }else{
+        g->vertices[u].flag = TRUE;
+        g->vertices[v].flag = TRUE;
+    }
+
+    for (i=0; i < g->n_vertices; i++){
+        if (g->vertices[i].flag){
+			count++;
+		}
+	}
+
+    return count; // retorna o número de arestas
+}
+
+
+int arest_flag(grafo_t *g, int v, int u){
+    int i, j, count=0;
+    if (g == NULL){
+        return FALSE;
+	}
+
+    if (v == 0 && u == 0){
+        /*nothing*/
+    }else{
+        g->matriz_adj[v][u].flag = TRUE;
+        g->matriz_adj[u][v].flag = TRUE;
+    }
+
+    for (i=0; i < g->n_vertices; i++){
+		for (j=0; j < g->n_vertices; j++){
+		    if (g->matriz_adj[i][j].flag){
+                count++;
+		    }
+		}
+    }
+    return count/2; // retorna o número de vertices
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 int vert_v(grafo_t *g){
 	int i, count=0;
