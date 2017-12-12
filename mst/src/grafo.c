@@ -21,7 +21,6 @@ struct arestas {
 	int adj;
 	int weight;
 	bool flag;
-	int adj_t;
 	/* mais informacoes, se necessario */
 };
 
@@ -76,7 +75,7 @@ grafo_t *cria_grafo(int vertices){
 }
 
 void prims(grafo_t *g, int v){
-	int i, j;
+	int i, j, k=0;
 
 	if (g == NULL){
 		perror("prims");
@@ -88,9 +87,8 @@ void prims(grafo_t *g, int v){
 		exit(EXIT_FAILURE);
 	}
 
-	int k=0;
 	while(k != g->n_vertices-1){
-		uint8_t w, id, menor = 0xFF;
+		int w, id, menor = INT_MAX; // 0xFFFF
 		for (i=0; i < g->n_vertices; i++){
 
 			w = g->matriz_adj[v][i].weight;
@@ -441,6 +439,11 @@ void importar_dados(const char *filename, grafo_t *g){
 	}
 	
 	//printf("Dados Importados!\n");
+	free(ip); // liberando arrays
+	free(mac);
+	free(gtw);
+	free(trash);
+
 	fclose(file);
 }
 
@@ -472,5 +475,6 @@ void importar_grafo(const char *filename, grafo_t *g){
 		cria_adjacencia(g, u, v, w);
 	}
 	//printf("Grafo Importado!\n");
+	free(trash);
 	fclose(file);
 }

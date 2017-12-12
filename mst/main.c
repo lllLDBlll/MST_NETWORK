@@ -40,11 +40,13 @@ int main(void) {
 
   	printf("\nGraph input to Kruskal:\n");
   	exportar_grafo_dot("output/kruskal_g.txt", h); // exporta grafo de entrada para kruskal
-
-	prims(g, 4); //(grafo, vertice)
-	kruskal(h); // (grafo)
-	boruvka();
 	
+	//boruvka(f);
+	prims(g, 4); //(grafo, vertice)
+
+	/*Kruskal Incomplete*/
+	kruskal(h); // (grafo)	
+
 	printf("\nTree MST output Prims:\n");
 	exportar_grafo_dot("output/prims_t.txt", g); // exporta árvore de prims
 
@@ -59,11 +61,6 @@ int main(void) {
 }
 
 void cria_adj_dados(bool input, grafo_t *g){
-	
-	char *ip = "IP: 192.168.0.254";
-    char *mask = "Mask: 255.255.255.0";
-    char *mac = "MAC: 00:1C:B3:09:85:15";
-
 	if(input){
 		importar_grafo("input/grafo.txt", g);
   		importar_dados("input/dados.txt", g);
@@ -73,13 +70,7 @@ void cria_adj_dados(bool input, grafo_t *g){
 	    vertice_dados(g, 2, "IP: 192.168.0.4/33", "MAC: 3333333333333333", "GATEWAY: 192.168.0.1/24");
 	    vertice_dados(g, 3, "IP: 192.168.0.4/11", "MAC: 1111111111111111", "GATEWAY: 192.168.0.1/24");
 	    vertice_dados(g, 4, "IP: 192.168.0.4/00", "MAC: 0000000000000000", "GATEWAY: 192.168.0.1/24");
-/*
-	for (i=0; i < m; i++){
-		for (j=0; j < m; j++){
-
-		}
-	}
-*/
+	    
 		cria_adjacencia(g, 0, 1, 13);
 		cria_adjacencia(g, 0, 2, 15);
 		cria_adjacencia(g, 0, 3, 15);
