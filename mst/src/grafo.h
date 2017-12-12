@@ -19,6 +19,7 @@ int rem_adjacencia(grafo_t *g, int u, int v);
 int adjacente(grafo_t *g, int u, int v);
 void prims(grafo_t *g, int v);
 void kruskal(grafo_t *g);
+void boruvka(grafo_t *g);
 int vert_flag(grafo_t *g, int v, int u);
 int arest_flag(grafo_t *g, int v, int u);
 int cycle(grafo_t *g, int v, int u);

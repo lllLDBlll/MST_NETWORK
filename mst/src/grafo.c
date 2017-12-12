@@ -4,10 +4,10 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "grafo.h"
-//#include "src/lista_enc.h"
-//#include "src/no.h"
 
 //#define DEBUG
+//#define DEBUG_EXP
+
 struct vertices {
 	int id;
 	char *ip;
@@ -77,7 +77,6 @@ grafo_t *cria_grafo(int vertices){
 
 void prims(grafo_t *g, int v){
 	int i, j;
-	//aresta_t **matriz_adj;
 
 	if (g == NULL){
 		perror("prims");
@@ -109,7 +108,9 @@ void prims(grafo_t *g, int v){
 				if (menor == w){
 					/*nothing*/
 				}else{
-					//printf("Removido: (%d, %d)\n", v, i);
+					#ifdef DEBUG
+						printf("Removido: (%d, %d)\n", v, i);
+					#endif // DEBUG
 					rem_adjacencia(g, v, i); // remove a adjacencia atual por que o peso é maior
 				}
 			}
@@ -129,35 +130,36 @@ void prims(grafo_t *g, int v){
 			if(g->matriz_adj[i][j].flag){
 				g->matriz_adj[i][j].adj = TRUE;
 			}
-			//printf("Flag[%d][%d]: %d\n", i, j, g->matriz_adj[i][j].flag);
+			#ifdef DEBUG
+				printf("Flag[%d][%d]: %d\n", i, j, g->matriz_adj[i][j].flag);
+			#endif
 		}
 	}
 }
 
 void kruskal(grafo_t *g){
+
+	int v_n=1, a_n=0;
+	int i, j, v, u;
+
 	if (g == NULL){
-		perror("prims");
+		perror("kruskal");
 		exit(EXIT_FAILURE);
 	}
-	
-	int v_n=1, a_n=0;
-	int i, j, v, u; //k
 
-	//while(k != (g->n_vertices)){
 	while(a_n != g->n_vertices-1){
 		int w, menor = INT_MAX; // 0xFFFF
 		for (i=0; i < g->n_vertices; i++){
 			for (j=0; j < g->n_vertices; j++){
 				w = adjacente_w(g, i, j);
 				if ((adjacente(g, i, j)) && !g->matriz_adj[i][j].flag){
-					if(w < menor){// condição de definição do menor
+					if(w < menor){ // selection of lowest weight
 						menor = w;
 						v = i;
 						u = j;
 					}
 				}
 			}
-			//j = i + 1;
 			if (i == (g->n_vertices-1)){
 
 				a_n = arest_flag(g, v, u);
@@ -171,20 +173,11 @@ void kruskal(grafo_t *g){
 					g->matriz_adj[u][v].flag = FALSE;
 					a_n = arest_flag(g, 0, 0);
 				}
-
-				/*printf("peso: %d v: %d u:%d v_n:%d a_n:%d \n", menor, v, u, v_n, a_n);
-				g->vertices[u].flag = TRUE;
-				g->vertices[v].flag = TRUE;
-				g->matriz_adj[v][u].flag = TRUE; // marca a adjacencia com o menor peso // criar função de flag
-				g->matriz_adj[u][v].flag = TRUE; // marca a adjacencia com o menor peso
-				//puts("End Show!");*/
 			}
 		}
-		//k++;
-
-		printf("peso: %d v: %d u:%d v_n:%d a_n:%d \n", menor, v, u, v_n, a_n);
-
-
+		#ifdef DEBUG
+			printf("peso: %d v: %d u:%d v_n:%d a_n:%d \n", menor, v, u, v_n, a_n);
+		#endif
 	}// end while
 
 	for (i=0; i < g->n_vertices; i++){
@@ -197,6 +190,16 @@ void kruskal(grafo_t *g){
 		}
 	}
 }
+
+void boruvka(grafo_t *g){
+
+	if (g == NULL){
+		perror("boruvka");
+		exit(EXIT_FAILURE);
+	}
+
+}
+
 
 int vert_flag(grafo_t *g, int v, int u){
     int i, j, count=0;
@@ -303,18 +306,15 @@ void vertice_dados(grafo_t *g, int v, char *str1, char *str2, char *str3){
 	if (g == NULL){
 		perror("vertice_datas");
 		exit(EXIT_FAILURE);
-		system("pause");
 	}
 
 	if (v > g->n_vertices){
 		perror("v - vertice_datas");
-		system("pause");
 		exit(EXIT_FAILURE);
 	}
 
 	if (str1 == NULL || str2 == NULL || str3 == NULL){
 		printf("String Inválida\n");
-		system("pause");
 		exit(-1);
 	}
 
@@ -363,7 +363,6 @@ void exportar_grafo_dot(const char *filename, grafo_t *g){
 
 	if (filename == NULL || g == NULL){
 		fprintf(stderr, "exportar_grafo_dot: ponteiros invalidos\n");
-		system("pause");
 		exit(EXIT_FAILURE);
 	}
 
@@ -371,7 +370,6 @@ void exportar_grafo_dot(const char *filename, grafo_t *g){
 
 	if (file == NULL){
 		perror("exportar_grafo_dot:");
-		system("pause");
 		exit(EXIT_FAILURE);
 	}
 
@@ -381,7 +379,7 @@ void exportar_grafo_dot(const char *filename, grafo_t *g){
 	for (i; i < g->n_vertices; i++){
 		for (j; j < g->n_vertices; j++){
 			if(adjacente(g,i,j) != 0){
-				if(i != j){ // Não imprimi o mesmo vertice
+				if(i != j){ // Não imprimi o vertice
 					fprintf(file, "\t%d -- %d [label = %d];\n", i, j, adjacente_w(g,i,j));
 				}
 				if(i != j){ 
@@ -389,19 +387,19 @@ void exportar_grafo_dot(const char *filename, grafo_t *g){
 				}
 			}
 		}
-		j = i+1; // evita duplicar a aresta no print
+		j = i+1; // evita duplicar a aresta na impressão
 	}
-/*
 
+/*
 	for (i=0; i < g->n_vertices; i++){
 		if(g->vertices[i].ip == NULL || g->vertices[i].mac == NULL || g->vertices[i].gtw == NULL){
 		}else{
 			printf("\tV(%d) -> %s : %s : %s\n", i, g->vertices[i].ip, g->vertices[i].mac, g->vertices[i].gtw);
 		}
 	}
-
 	printf("\n");
 */
+
 	fprintf(file, "}\n");
 
 	fclose(file);
@@ -420,7 +418,6 @@ void importar_dados(const char *filename, grafo_t *g){
 
 	if (filename == NULL ||g == NULL){
 		fprintf(stderr, "importar_dados: ponteiros invalidos\n");
-		system("pause");
 		exit(EXIT_FAILURE);
 	}
 
@@ -428,14 +425,13 @@ void importar_dados(const char *filename, grafo_t *g){
 
 	if (file == NULL){
 		perror("importar_dados:");
-		system("pause");
 		exit(EXIT_FAILURE);
 	}
 	fscanf(file,"%[^\n]", trash);
-	printf("%s\n\n\n", trash);
+	//printf("%s\n\n\n", trash);
 	while(!feof(file)){
 		fscanf(file,"%d,%[^,],%[^,],%[^,],%s\n", &v, ip, mac, gtw, trash);
-		printf("%d,%s,%s,%s - %d\n", v, ip, mac, gtw);
+		//printf("%d,%s,%s,%s - %d\n", v, ip, mac, gtw);
 		#ifdef DEBUG
 			printf("IP: %s\n", ip);
 			printf("MAC: %s\n", mac);
@@ -444,7 +440,7 @@ void importar_dados(const char *filename, grafo_t *g){
 		vertice_dados(g, v, ip, mac, gtw);
 	}
 	
-	printf("Dados Importados!\n");
+	//printf("Dados Importados!\n");
 	fclose(file);
 }
 
@@ -459,7 +455,6 @@ void importar_grafo(const char *filename, grafo_t *g){
 
 	if (filename == NULL ||g == NULL){
 		fprintf(stderr, "importar_grafo: ponteiros invalidos\n");
-		system("pause");
 		exit(EXIT_FAILURE);
 	}
 
@@ -467,17 +462,15 @@ void importar_grafo(const char *filename, grafo_t *g){
 
 	if (file == NULL){
 		perror("importar_grafo:");
-		system("pause");
 		exit(EXIT_FAILURE);
 	}
 	fscanf(file,"%[^\n]", trash);
 	//printf("%s\n\n\n", trash);
 	while(!feof(file)){
 		fscanf(file,"%d,%d,%d\n", &u, &v, &w);
-		printf("%d,%d,%d\n", u, v, w);
+		//printf("%d,%d,%d\n", u, v, w);
 		cria_adjacencia(g, u, v, w);
 	}
-
-	printf("Grafo Importado!\n");
+	//printf("Grafo Importado!\n");
 	fclose(file);
 }

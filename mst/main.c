@@ -12,24 +12,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-
 #include "src/grafo.h"
-//#include "src/lista_enc.h" // Leonardo
-//#include "src/no.h"	// Leonardo
 
 void cria_adj_dados(bool input, grafo_t *g);
 
 int main(void) {
+	/*Example test parameters:
+	- input files: grafo_test.txt and dados_test.txt
+	- cria_grafo(15);
+	- cria_adj_dados(1, g);
+	- prims(g, 4);
+	*/
 	printf("Welcome to MST - Minimum Spanning Tree of Computer's Network\n");
 	printf("Author: Leonardo Domingos Batista\n\n");
 
 	grafo_t *g;
 	grafo_t *h;
 
-    char *ip = "IP: 192.168.0.254";
-    char *mask = "Mask: 255.255.255.0";
-    char *mac = "MAC: 00:1C:B3:09:85:15";
-	
 	g = cria_grafo(15); // cria grafo passando o número de vertices
 	h = cria_grafo(15);
 
@@ -37,14 +36,15 @@ int main(void) {
 	cria_adj_dados(1, h);
 	
 	printf("Graph input to Prims:\n");
-  	exportar_grafo_dot("input/prims_g.txt", g); // exporta grafo de entrada para prims
+  	exportar_grafo_dot("output/prims_g.txt", g); // exporta grafo de entrada para prims
 
   	printf("\nGraph input to Kruskal:\n");
-  	exportar_grafo_dot("input/kruskal_g.txt", h); // exporta grafo de entrada para kruskal
+  	exportar_grafo_dot("output/kruskal_g.txt", h); // exporta grafo de entrada para kruskal
 
 	prims(g, 4); //(grafo, vertice)
 	kruskal(h); // (grafo)
-
+	boruvka();
+	
 	printf("\nTree MST output Prims:\n");
 	exportar_grafo_dot("output/prims_t.txt", g); // exporta árvore de prims
 
@@ -54,14 +54,19 @@ int main(void) {
 	libera_grafo(g);
 	libera_grafo(h);
 
-	system("pause");
+	system("pause"); // just for windows system
 	return EXIT_SUCCESS;
 }
 
 void cria_adj_dados(bool input, grafo_t *g){
+	
+	char *ip = "IP: 192.168.0.254";
+    char *mask = "Mask: 255.255.255.0";
+    char *mac = "MAC: 00:1C:B3:09:85:15";
+
 	if(input){
-		importar_grafo("grafo_test.txt", g);
-  		importar_dados("dados_test", g);
+		importar_grafo("input/grafo.txt", g);
+  		importar_dados("input/dados.txt", g);
 	}else{
 	    vertice_dados(g, 0, "IP: 192.168.0.254/24", "MAC: 00:1D:B3:09:85:15", "GATEWAY: 192.168.0.1/24");
 	    vertice_dados(g, 1, "IP: 192.168.0.100/24", "MAC: 00:1C:B9:09:23:17", "GATEWAY: 192.168.0.1/24");
@@ -87,11 +92,3 @@ void cria_adj_dados(bool input, grafo_t *g){
 	    cria_adjacencia(g, 3, 4, 12);
 	}
 }
-
-	/*Imprimi matriz 
-	int m = 5; // tamanho da matriz quadrada
-	for (i=0; i < m; i++){
-		for (j=0; j < m; j++)
-			printf("[%d] [%d] : %d label[%d]\n", i,j, adjacente(g,i,j), adjacente_w(g, i, j));
-	}
-  	*/
