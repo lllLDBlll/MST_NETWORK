@@ -30,26 +30,26 @@ int main(void) {
     char *mask = "Mask: 255.255.255.0";
     char *mac = "MAC: 00:1C:B3:09:85:15";
 	
-	g = cria_grafo(5); // cria grafo passando o número de vertices
-	h = cria_grafo(5);
+	g = cria_grafo(15); // cria grafo passando o número de vertices
+	h = cria_grafo(15);
 
-	cria_adj_dados(0, g); // 0 - Entrada Manual || 1 - Importar de Arquivo
-	cria_adj_dados(0, h);
+	cria_adj_dados(1, g); // 0 - Entrada Manual || 1 - Importar de Arquivo
+	cria_adj_dados(1, h);
 	
-	printf("Grafo de entrada Prims:\n");
-  	exportar_grafo_dot("prims_g.txt", g); // exporta grafo de entrada para prims
+	printf("Graph input to Prims:\n");
+  	exportar_grafo_dot("input/prims_g.txt", g); // exporta grafo de entrada para prims
 
-  	printf("\nGrafo de entrada Kruskal:\n");
-  	exportar_grafo_dot("kruskal_g.txt", h); // exporta grafo de entrada para kruskal
+  	printf("\nGraph input to Kruskal:\n");
+  	exportar_grafo_dot("input/kruskal_g.txt", h); // exporta grafo de entrada para kruskal
 
-	prims(g, 2); //(grafo, vertice)
+	prims(g, 4); //(grafo, vertice)
 	kruskal(h); // (grafo)
 
-	printf("\nArvore de saida Prims:\n");
-	exportar_grafo_dot("prims_t.txt", g); // exporta árvore de prims
+	printf("\nTree MST output Prims:\n");
+	exportar_grafo_dot("output/prims_t.txt", g); // exporta árvore de prims
 
-	printf("\nArvore de saida Kruskal:\n");
-  	exportar_grafo_dot("kruskal_t.txt", h); // exporta árvore de kruskal
+	printf("\nTree MST output Kruskal:\n");
+  	exportar_grafo_dot("output/kruskal_t.txt", h); // exporta árvore de kruskal
 
 	libera_grafo(g);
 	libera_grafo(h);
@@ -60,8 +60,8 @@ int main(void) {
 
 void cria_adj_dados(bool input, grafo_t *g){
 	if(input){
-		importar_grafo("grafo_input.txt", g);
-  		importar_dados("dados.txt", g);
+		importar_grafo("grafo_test.txt", g);
+  		importar_dados("dados_test", g);
 	}else{
 	    vertice_dados(g, 0, "IP: 192.168.0.254/24", "MAC: 00:1D:B3:09:85:15", "GATEWAY: 192.168.0.1/24");
 	    vertice_dados(g, 1, "IP: 192.168.0.100/24", "MAC: 00:1C:B9:09:23:17", "GATEWAY: 192.168.0.1/24");

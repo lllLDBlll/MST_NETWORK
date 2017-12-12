@@ -141,41 +141,25 @@ void kruskal(grafo_t *g){
 	}
 	
 	int v_n=1, a_n=0;
-	int i, j, k=0, v=-1, u=0, u_old = 0, v_old = 0, pmt=0;
+	int i, j, v, u; //k
 
 	//while(k != (g->n_vertices)){
 	while(a_n != g->n_vertices-1){
-		int w, menor = 0xFFFF;//INT_MAX;
+		int w, menor = INT_MAX; // 0xFFFF
 		for (i=0; i < g->n_vertices; i++){
 			for (j=0; j < g->n_vertices; j++){
 				w = adjacente_w(g, i, j);
-				if ((adjacente(g, i, j)) && !g->matriz_adj[i][j].flag && !pmt/* g->vertices[i].flag*/){
+				if ((adjacente(g, i, j)) && !g->matriz_adj[i][j].flag){
 					if(w < menor){// condição de definição do menor
 						menor = w;
 						v = i;
 						u = j;
 					}
-				}else{
-					if (pmt != 0){
-
-					}
-
 				}
 			}
 			//j = i + 1;
 			if (i == (g->n_vertices-1)){
-				if (a_n == v_n-1){
-					//cycle = 1;
-					puts("Kinder");
-				}else{
-					puts("PUTS");
-					//printf("peso: %d v: %d u:%d v_n:%d a_n:%d \n", menor, v, u, v_n, a_n);
-					//g->vertices[u].flag = FALSE;
-					//g->vertices[v].flag = FALSE;
-					//v = 0;
-					//u = 0;
-					//cycle = 1;
-				}
+
 				a_n = arest_flag(g, v, u);
 				v_n = vert_flag(g, v, u);
 
@@ -186,48 +170,22 @@ void kruskal(grafo_t *g){
 					g->matriz_adj[v][u].flag = FALSE;
 					g->matriz_adj[u][v].flag = FALSE;
 					a_n = arest_flag(g, 0, 0);
-					}
+				}
 
-				//puts("Just One Shot!");
 				/*printf("peso: %d v: %d u:%d v_n:%d a_n:%d \n", menor, v, u, v_n, a_n);
 				g->vertices[u].flag = TRUE;
 				g->vertices[v].flag = TRUE;
 				g->matriz_adj[v][u].flag = TRUE; // marca a adjacencia com o menor peso // criar função de flag
 				g->matriz_adj[u][v].flag = TRUE; // marca a adjacencia com o menor peso
-				//puts("End Show!");
-			*/}
-		}
-		k++;
-		//cycle(g, k, g->n_vertices-1);
-		
-
-		//
-		/*if (a_n != v_n-1){
-		puts("imuah");
-			g->matriz_adj[v][u].flag = FALSE; // marca a adjacencia com o menor peso // criar função de flag
-			g->matriz_adj[u][v].flag = FALSE; // marca a adjacencia com o menor peso
-			//g->vertices[u].flag = FALSE;
-			//g->vertices[v].flag = FALSE;
-		}*/
-/*
-		for (i=0; i < g->n_vertices; i++){
-			v_n = v_n + g->vertices[i].flag;
-			for (j=0; j < g->n_vertices; j++){
-				a_n = a_n + g->matriz_adj[i][j].flag;
+				//puts("End Show!");*/
 			}
-		}*/
-
+		}
+		//k++;
 
 		printf("peso: %d v: %d u:%d v_n:%d a_n:%d \n", menor, v, u, v_n, a_n);
 
 
 	}// end while
-	/*g->matriz_adj[4][5].flag = FALSE;
-	g->matriz_adj[5][4].flag = FALSE;
-	g->matriz_adj[5][1].flag = FALSE;
-	g->matriz_adj[1][5].flag = FALSE;
-*/
-	//cycle(g, 1, 5);
 
 	for (i=0; i < g->n_vertices; i++){
 		for (j=0; j < g->n_vertices; j++){
@@ -238,42 +196,6 @@ void kruskal(grafo_t *g){
 			//printf("Flag[%d][%d]: %d\n", i, j, g->matriz_adj[i][j].flag);
 		}
 	}
-}
-
-int cycle(grafo_t *g, int v, int u){
-	int i,j,k;
-	if (!g->vertices[v].flag || !g->vertices[u].flag){
-		puts("Sem Vertice!");
-		return 0;
-	}
-	if (g->matriz_adj[v][u].flag){
-		puts("Chegou!!!!");
-		//return TRUE;
-	}
-
-	for (i=0; i < g->n_vertices; i++){
-		if (g->matriz_adj[v][i].flag){
-			if (v == u){
-				return 0;
-			}
-			cycle(g, i, 0);	
-			puts("ALADIN!");
-		}
-	}
-	/*for (i=0; i < g->n_vertices; i++){
-		for (j=0; j < g->n_vertices; j++){
-			for (k=0; k < g->n_vertices; k++){
-				if (g->matriz_adj[i][j].flag){
-					if (g->matriz_adj[j][k].flag){
-						if (g->matriz_adj[k][i].flag){
-							puts("ALADIN!");
-						}
-					}
-				}
-			}
-		}
-	}*/
-		
 }
 
 int vert_flag(grafo_t *g, int v, int u){
@@ -323,21 +245,6 @@ int arest_flag(grafo_t *g, int v, int u){
     return count/2; // retorna o número de vertices
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 int vert_v(grafo_t *g){
 	int i, count=0;
 
@@ -357,7 +264,7 @@ int vert_v(grafo_t *g){
 	}
 }
 
-void libera_grafo (grafo_t *g){
+void libera_grafo(grafo_t *g){
 	int i;
 
 	if (g == NULL){
@@ -401,6 +308,7 @@ void vertice_dados(grafo_t *g, int v, char *str1, char *str2, char *str3){
 
 	if (v > g->n_vertices){
 		perror("v - vertice_datas");
+		system("pause");
 		exit(EXIT_FAILURE);
 	}
 
@@ -414,6 +322,7 @@ void vertice_dados(grafo_t *g, int v, char *str1, char *str2, char *str3){
 	g->vertices[v].mac = str2; 
 	g->vertices[v].gtw = str3; 
 }
+
 int rem_adjacencia(grafo_t *g, int u, int v){
 
 	if (g == NULL){
@@ -454,6 +363,7 @@ void exportar_grafo_dot(const char *filename, grafo_t *g){
 
 	if (filename == NULL || g == NULL){
 		fprintf(stderr, "exportar_grafo_dot: ponteiros invalidos\n");
+		system("pause");
 		exit(EXIT_FAILURE);
 	}
 
@@ -461,6 +371,7 @@ void exportar_grafo_dot(const char *filename, grafo_t *g){
 
 	if (file == NULL){
 		perror("exportar_grafo_dot:");
+		system("pause");
 		exit(EXIT_FAILURE);
 	}
 
@@ -500,11 +411,12 @@ void importar_dados(const char *filename, grafo_t *g){
 	
 	FILE *file;
 	int v;
-	char *ip, *mac, *gtw;
+	char *ip, *mac, *gtw, *trash;
 
- 	ip = (char*)calloc(100, sizeof(char));
- 	mac = (char*)calloc(100, sizeof(char)); 
- 	gtw = (char*)calloc(100, sizeof(char)); 
+ 	ip = (char*)calloc(1000, sizeof(char));
+ 	mac = (char*)calloc(1000, sizeof(char)); 
+ 	gtw = (char*)calloc(1000, sizeof(char)); 
+ 	trash = (char*)calloc(1000, sizeof(char)); 
 
 	if (filename == NULL ||g == NULL){
 		fprintf(stderr, "importar_dados: ponteiros invalidos\n");
@@ -519,10 +431,11 @@ void importar_dados(const char *filename, grafo_t *g){
 		system("pause");
 		exit(EXIT_FAILURE);
 	}
-
+	fscanf(file,"%[^\n]", trash);
+	printf("%s\n\n\n", trash);
 	while(!feof(file)){
-		fscanf(file,"%d,%[^,],%[^,],%s\n", &v, ip, mac, gtw);
-		printf("%d,%s,%s,%s\n", v, ip, mac, gtw);
+		fscanf(file,"%d,%[^,],%[^,],%[^,],%s\n", &v, ip, mac, gtw, trash);
+		printf("%d,%s,%s,%s - %d\n", v, ip, mac, gtw);
 		#ifdef DEBUG
 			printf("IP: %s\n", ip);
 			printf("MAC: %s\n", mac);
@@ -540,9 +453,13 @@ void importar_grafo(const char *filename, grafo_t *g){
 
 	FILE *file;
 	int u, v, w;
+	char *trash;
+
+ 	trash = (char*)calloc(1000, sizeof(char)); 
 
 	if (filename == NULL ||g == NULL){
 		fprintf(stderr, "importar_grafo: ponteiros invalidos\n");
+		system("pause");
 		exit(EXIT_FAILURE);
 	}
 
@@ -550,12 +467,14 @@ void importar_grafo(const char *filename, grafo_t *g){
 
 	if (file == NULL){
 		perror("importar_grafo:");
+		system("pause");
 		exit(EXIT_FAILURE);
 	}
-
+	fscanf(file,"%[^\n]", trash);
+	//printf("%s\n\n\n", trash);
 	while(!feof(file)){
 		fscanf(file,"%d,%d,%d\n", &u, &v, &w);
-		//printf("%d,%d,%d\n", u, v, w);
+		printf("%d,%d,%d\n", u, v, w);
 		cria_adjacencia(g, u, v, w);
 	}
 

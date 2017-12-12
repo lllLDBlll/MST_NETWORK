@@ -2,7 +2,7 @@
 #define GRAFO_H_
 
 
-#define MAX_VERTICES 50
+#define MAX_VERTICES 150
 
 #define TRUE 1
 #define FALSE 0
