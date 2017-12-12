@@ -22,8 +22,6 @@ void kruskal(grafo_t *g);
 void boruvka(grafo_t *g);
 int vert_flag(grafo_t *g, int v, int u);
 int arest_flag(grafo_t *g, int v, int u);
-int cycle(grafo_t *g, int v, int u);
-int vert_v(grafo_t *g);
 int adjacente_w(grafo_t *g, int u, int v);
 void exportar_grafo_dot(const char *filename, grafo_t *g);
 void importar_grafo(const char *filename, grafo_t *g);

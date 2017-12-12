@@ -246,25 +246,6 @@ int arest_flag(grafo_t *g, int v, int u){
     return count/2; // retorna o número de vertices
 }
 
-int vert_v(grafo_t *g){
-	int i, count=0;
-
-	if (g == NULL){
-		return FALSE;
-	}
-
-	for (i=0; i < g->n_vertices; i++){
-		if (g->vertices[i].flag){
-			count++;
-		}
-	}
-	if (count >= g->n_vertices){
-		return TRUE;
-	}else{
-		return FALSE;
-	}
-}
-
 void libera_grafo(grafo_t *g){
 	int i;
 
