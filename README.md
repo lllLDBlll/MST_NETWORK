@@ -1,13 +1,13 @@
 # MST_NETWORK
 Minimum spanning tree as computer network topology example.
+
 ## Features:
-#### - MST Implementation (Prim's)
+#### - MST implementation (Prim's)
 #### - Receive .txt graph (or .csv)
-#### - Output Graph .dot
-#### - Datas by IP/MAC/GATEWAY in Vertexes
+#### - Output graph .dot (as .txt)
+#### - Datas by IP/MAC/GATEWAY in vertexes
 
-
-##References:
+## References:
 ### Borůvka's Algorithm
 https://en.wikipedia.org/wiki/Bor%C5%AFvka%27s_algorithm
 http://www.geeksforgeeks.org/greedy-algorithms-set-9-boruvkas-algorithm/
